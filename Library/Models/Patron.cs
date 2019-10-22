@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 
 namespace Library.Models
@@ -6,12 +7,12 @@ namespace Library.Models
     {
         public Patron()
         {
-            this.Books = new HashSet<BookPatron>();  
+            this.Copies = new HashSet<CopyPatron>();  
         }
 
         public int PatronId { get; set; }
         public int Name { get; set; }
 
-        public ICollection<BookPatron> Books { get;}
+        public ICollection<CopyPatron> Copies { get;}
     }
 }
