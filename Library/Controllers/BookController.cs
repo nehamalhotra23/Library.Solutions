@@ -83,8 +83,18 @@ namespace Library.Controllers
         }
         public ActionResult Details(int id)
         {
-            ViewBag.firstAuthor = _db.AuthorBook.Include(authorBook => authorBook.Author).FirstOrDefault(authorBook => authorBook.BookId == id);
-
+            List<AuthorBook> authorBooks = new List<AuthorBook>();
+            authorBooks = _db.AuthorBook
+                .Include(authorBook => authorBook.Author)
+                .Where(authorBook => authorBook.BookId == id)
+                .ToList();
+            List<Author> authors = new List <Author>();
+            
+            foreach(AuthorBook authorBook in authorBooks) 
+            {
+                authors.Add(authorBook.Author);
+            }
+            ViewBag.Authors = authors;
             Book thisBook = _db.Books
                 .Include(book => book.Authors)
                 .FirstOrDefault(book => book.BookId == id);

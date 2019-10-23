@@ -1,0 +1,19 @@
+@{
+  Layout = "_Layout";
+  List<Book> Books = ViewBag.Books as List <Book>;
+}
+
+@model Library.Models.Author;
+
+<h2>Author Details</h2>
+<hr />
+<h3>@Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)</h3>
+
+
+  <h4>books of this author:</h4>
+  <ul>
+  @foreach(Book book  in Books)
+  {
+    <li>@book.Title</li>
+  }
+  </ul>

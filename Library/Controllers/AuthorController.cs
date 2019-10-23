@@ -33,5 +33,24 @@ namespace Library.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+    public ActionResult Details(int id)
+    {
+      List<AuthorBook> authorBooks = new List<AuthorBook>();
+      authorBooks = _db.AuthorBook
+        .Include(authorBook => authorBook.Book)
+        .Where(authorBook => authorBook.AuthorId == id)
+        .ToList();
+
+      List<Book> books = new List<Book>();
+      foreach(AuthorBook authorBook in authorBooks)
+      {
+        books.Add(authorBook.Book);
+      }
+      ViewBag.Books = books;
+      Author thisAuthor = _db.Authors
+          .FirstOrDefault(a => a.AuthorId == id);
+      return View(thisAuthor);
+    }
+
   }
 }

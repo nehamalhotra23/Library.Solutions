@@ -1,6 +1,6 @@
 @{
   Layout = "_Layout";
-  AuthorBook firstAuthor = ViewBag.firstAuthor as AuthorBook;
+  List<Author> Authors = ViewBag.Authors as List <Author>;
 }
 
 @model Library.Models.Book
@@ -9,5 +9,8 @@
 
 <h3>@Html.DisplayNameFor(model => model.Title): @Html.DisplayFor(model => model.Title)</h3>
 
+@foreach( Author author in Authors)
+{
+  <p>@author.Name</p>
+}
 
-<p>@firstAuthor.Author.Name</p>
