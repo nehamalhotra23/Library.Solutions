@@ -3,7 +3,20 @@
 }
 
 <h1>Library</h1>
-<p>@Html.ActionLink("Create an account", "Index", "Account")</p>
-<p>@Html.ActionLink("View all books", "Index", "Book")</p>
-<p>@Html.ActionLink("View all authors", "Index", "Author")</p>
-
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Hello @User.Identity.Name!</p>
+     @using (Html.BeginForm("LogOff", "Account"))
+    {
+        <input type="submit" class="btn btn-primary" value="Log out" />
+        
+    }
+    <p>@Html.ActionLink("Add new book", "Create", "Book")</p>
+    <p>@Html.ActionLink("Add new author", "Create", "Author")</p>
+}
+else
+{
+    <p>@Html.ActionLink("Register", "Register", "Account")</p>
+    <p>@Html.ActionLink("Log in", "Login", "Account")</p>
+    
+}

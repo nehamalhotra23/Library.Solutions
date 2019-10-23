@@ -73,7 +73,6 @@ namespace Library.Controllers
             _db.Books.Add(book);
             _db.SaveChanges();
             
-            
             List<string> authors = new List<string>();
             authors.Add(Author1);
             authors.Add(Author2);
@@ -108,6 +107,9 @@ namespace Library.Controllers
         }
         public ActionResult Details(int id)
         {
+            // var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // var currentUser = await _userManager.FindByIdAsync(userId);
+            // // book.User = currentUser;
             List<AuthorBook> authorBooks = new List<AuthorBook>();
             authorBooks = _db.AuthorBook
                 .Include(authorBook => authorBook.Author)
