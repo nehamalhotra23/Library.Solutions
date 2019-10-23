@@ -8,15 +8,17 @@
     <p>Hello @User.Identity.Name!</p>
      @using (Html.BeginForm("LogOff", "Account"))
     {
-        <input type="submit" class="btn btn-primary" value="Log out" />
-        
+        <input type="submit" class="btn btn-primary" value="Log out" />        
     }
     <p>@Html.ActionLink("Add new book", "Create", "Book")</p>
     <p>@Html.ActionLink("Add new author", "Create", "Author")</p>
+    <p>@Html.ActionLink("View all Authors", "Index", "Author")</p>
+    <p>@Html.ActionLink("View all books", "Index", "Book")</p>
+    
 }
 else
 {
     <p>@Html.ActionLink("Register", "Register", "Account")</p>
     <p>@Html.ActionLink("Log in", "Login", "Account")</p>
-    
 }
+ 
