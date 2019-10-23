@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 
 namespace Library.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class BookController : Controller
     {
         private readonly LibraryContext _db;
@@ -20,10 +21,10 @@ namespace Library.Controllers
         //updated constructor
         public BookController(UserManager<ApplicationUser> userManager, LibraryContext db)
         {
-        _userManager = userManager;
-        _db = db;
+            _userManager = userManager;
+            _db = db;
         }
-    
+
         public async Task<ActionResult> Index()
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -34,9 +35,9 @@ namespace Library.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.AuthorId = new SelectList(_db.Authors, "AuthorId", "Name");
-            ViewBag.Author2Id = new SelectList(_db.Authors, "AuthorId", "Name");
-            ViewBag.Author3Id = new SelectList(_db.Authors, "AuthorId", "Name");
+            // ViewBag.AuthorId = new SelectList(_db.Authors, "AuthorId", "Name");
+            // ViewBag.Author2Id = new SelectList(_db.Authors, "AuthorId", "Name");
+            // ViewBag.Author3Id = new SelectList(_db.Authors, "AuthorId", "Name");
             return View();
         }
 
@@ -64,20 +65,44 @@ namespace Library.Controllers
         //     return RedirectToAction("Index");
         // }
         [HttpPost]
-        public async Task<ActionResult> Create(Book book, string Author1)
+        public async Task<ActionResult> Create(Book book, string Author1, string Author2, string Author3)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userManager.FindByIdAsync(userId);
             book.User = currentUser;
             _db.Books.Add(book);
-            if ( Author1.Length != 0)
+            _db.SaveChanges();
+            
+            
+            List<string> authors = new List<string>();
+            authors.Add(Author1);
+            authors.Add(Author2);
+            authors.Add(Author3);
+           
+            foreach(string author in authors)
             {
-                Author Author1Obj =  _db.Authors.FirstOrDefault(Author => Author.Name == Author1);
-
-
-                _db.AuthorBook.Add(new AuthorBook() { AuthorId = Author1Obj.AuthorId, BookId = book.BookId });
+                if (author != null)
+                {
+                    Author authorObj;
+                    int authorId;
+                    if(_db.Authors.Contains(new Author() { Name = author}))
+                    {
+                        authorObj = _db.Authors.FirstOrDefault(Author => Author.Name == author);
+                        authorId = authorObj.AuthorId;
+                    } 
+                    else 
+                    {
+                        var newAuthor = new Author();
+                        _db.Authors.Add(new Author() { Name = author}); // add author to database
+                        _db.SaveChanges();
+                        authorObj = _db.Authors.FirstOrDefault(Author => Author.Name == author);
+                        authorId = authorObj.AuthorId;
+                    }
+                    _db.AuthorBook.Add(new AuthorBook() {AuthorId = authorId, BookId = book.BookId});                    
+                }
             }
             
+
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -88,9 +113,9 @@ namespace Library.Controllers
                 .Include(authorBook => authorBook.Author)
                 .Where(authorBook => authorBook.BookId == id)
                 .ToList();
-            List<Author> authors = new List <Author>();
-            
-            foreach(AuthorBook authorBook in authorBooks) 
+            List<Author> authors = new List<Author>();
+
+            foreach (AuthorBook authorBook in authorBooks)
             {
                 authors.Add(authorBook.Author);
             }
